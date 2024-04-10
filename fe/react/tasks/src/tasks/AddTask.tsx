@@ -1,6 +1,10 @@
 import {useState} from 'react';
 
-export default function AddTask({onAddTask}) {
+export interface AddTaskProps {
+    onAddTask: (text: string) => void;
+}
+
+export default function AddTask(props: AddTaskProps) {
     const [text, setText] = useState('');
     return (
         <>
@@ -11,7 +15,7 @@ export default function AddTask({onAddTask}) {
             />
             <button onClick={() => {
                 setText('');
-                onAddTask(text);
+                props.onAddTask(text);
             }}>Add
             </button>
         </>

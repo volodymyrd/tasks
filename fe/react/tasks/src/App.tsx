@@ -2,8 +2,11 @@ import {useReducer} from 'react';
 import AddTask from './tasks/AddTask.tsx';
 import TaskList from './tasks/TaskList.tsx';
 import tasksReducer from './tasks/TaskReducer.tsx';
+import Task from './model/Task.tsx';
+import {TaskActionType} from './model/actions/TaskAction.tsx';
 
 import './App.css'
+
 
 function App() {
     const [tasks, dispatch] = useReducer(
@@ -11,25 +14,28 @@ function App() {
         initialTasks
     );
 
-    function handleAddTask(text) {
+    function handleAddTask(text: string) {
         dispatch({
-            type: 'added',
-            id: nextId++,
-            text: text,
+            type: TaskActionType.ADD,
+            task: {
+                id: nextId++,
+                text: text,
+                done: false
+            }
         });
     }
 
-    function handleChangeTask(task) {
+    function handleChangeTask(task: Task) {
         dispatch({
-            type: 'changed',
+            type: TaskActionType.UPDATE,
             task: task
         });
     }
 
-    function handleDeleteTask(taskId) {
+    function handleDeleteTask(taskId: number) {
         dispatch({
-            type: 'deleted',
-            id: taskId
+            type: TaskActionType.DELETE,
+            task: {id: taskId, text: '', done: false}
         });
     }
 

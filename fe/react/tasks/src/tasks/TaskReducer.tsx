@@ -1,13 +1,16 @@
-function tasksReducer(tasks, action) {
+import Task from '../model/Task.tsx';
+import {TaskAction, TaskActionType} from '../model/actions/TaskAction.tsx';
+
+function tasksReducer(tasks: Task[], action: TaskAction): Task[] {
     switch (action.type) {
-        case 'added': {
+        case TaskActionType.ADD: {
             return [...tasks, {
-                id: action.id,
-                text: action.text,
+                id: action.task.id,
+                text: action.task.text,
                 done: false
             }];
         }
-        case 'changed': {
+        case TaskActionType.UPDATE: {
             return tasks.map(t => {
                 if (t.id === action.task.id) {
                     return action.task;
@@ -16,8 +19,8 @@ function tasksReducer(tasks, action) {
                 }
             });
         }
-        case 'deleted': {
-            return tasks.filter(t => t.id !== action.id);
+        case TaskActionType.DELETE: {
+            return tasks.filter(t => t.id !== action.task.id);
         }
         default: {
             throw Error('Unknown action: ' + action.type);

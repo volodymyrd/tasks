@@ -1,18 +1,21 @@
 import {useState} from 'react';
+import Task from '../model/Task.tsx';
 
-export default function TaskList({
-                                     tasks,
-                                     onChangeTask,
-                                     onDeleteTask
-                                 }) {
+interface TaskListProps {
+    tasks: Task[];
+    onChangeTask: (task: Task) => void;
+    onDeleteTask: (taskId: number) => void;
+}
+
+export default function TaskList(props: TaskListProps) {
     return (
         <ul>
-            {tasks.map(task => (
+            {props.tasks.map(task => (
                 <li key={task.id}>
-                    <Task
+                    <TaskItem
                         task={task}
-                        onChange={onChangeTask}
-                        onDelete={onDeleteTask}
+                        onChange={props.onChangeTask}
+                        onDelete={props.onDeleteTask}
                     />
                 </li>
             ))}
@@ -20,17 +23,23 @@ export default function TaskList({
     );
 }
 
-function Task({task, onChange, onDelete}) {
+interface TaskItemProps {
+    task: Task;
+    onChange: (task: Task) => void;
+    onDelete: (taskId: number) => void;
+}
+
+function TaskItem(props: TaskItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     let taskContent;
     if (isEditing) {
         taskContent = (
             <>
                 <input
-                    value={task.text}
+                    value={props.task.text}
                     onChange={e => {
-                        onChange({
-                            ...task,
+                        props.onChange({
+                            ...props.task,
                             text: e.target.value
                         });
                     }}/>
@@ -42,7 +51,7 @@ function Task({task, onChange, onDelete}) {
     } else {
         taskContent = (
             <>
-                {task.text}
+                {props.task.text}
                 <button onClick={() => setIsEditing(true)}>
                     Edit
                 </button>
@@ -53,16 +62,16 @@ function Task({task, onChange, onDelete}) {
         <label>
             <input
                 type="checkbox"
-                checked={task.done}
+                checked={props.task.done}
                 onChange={e => {
-                    onChange({
-                        ...task,
+                    props.onChange({
+                        ...props.task,
                         done: e.target.checked
                     });
                 }}
             />
             {taskContent}
-            <button onClick={() => onDelete(task.id)}>
+            <button onClick={() => props.onDelete(props.task.id)}>
                 Delete
             </button>
         </label>
